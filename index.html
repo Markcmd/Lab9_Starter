@@ -95,13 +95,168 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      
+      // Step 2    uncomment if needed
+      try {
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        triggerGlobalError();
+      } 
+
+      // Step 3    uncomment if needed
+      try {
+        // Check for invalid inputs
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new Error("Inputs must be numbers");
+        }
+        if (secondNum == 0 && operator == '/') {
+          throw new Error("Division by zero is not allowed");
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        console.error("Sadly an error happened my friend", error);
+      } finally {
+        console.log("Calculation attempted");
+      }
+
+      // Step 4     uncomment if needed 
+      try {
+        // Check for invalid inputs
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new CalculationError("Inputs must be numbers");
+        }
+        if (secondNum == 0 && operator == '/') {
+          throw new CalculationError("Division by zero is not allowed");
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        if (error instanceof CalculationError) {
+          console.error("Calculation error occurred: ", error.message);
+        } else {
+          console.error("Sadly an error happened my friend", error);
+        }
+      } finally {
+        console.log("Calculation attempted");
+      }
+
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    class CalculationError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "CalculationError";
+      }
+    }
+
+
+    function deepest()        {console.trace();}
+    function deeper()         {deepest();}
+    function deep()           {deeper();}
+    function handleBtnClick() {deep();}
+
+    function triggerGlobalError() {
+      try {
+        boom; // Accessing an undefined variable to trigger a ReferenceError
+      } catch (error) {
+        throw error; // Re-throw the error to allow the browser to handle it
+      } finally {
+        console.log("Sadly an error happened my friend");
+      }
+    }
+    // const consoleTraceBtn = errorBtns.find(btn => btn.textContent.trim().replace(/\s+/g, '').toLowerCase() === 'consoletrace');
+    // consoleTraceBtn.addEventListener('click', () => {
+    //   handleBtnClick();
+    // });
+
+
+    let count = 0; // Counter variable
+    let groupStarted = false; // Flag to track if group is started
+    
+
+    errorBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const methodName = btn.textContent.trim().replace(/\s+/g, '').toLowerCase(); // Get method name from button text
+        const data = {}; // You can define your own data for testing
+
+        // Execute corresponding console method based on button text
+        switch (methodName) {
+          case 'consolelog':
+            console.log("Console Log Demo");
+            break;
+          case 'consoleerror':
+            console.error("Console Error Demo");
+            break;
+          case 'consolecount':
+            count++;
+            console.log(`Count Button: ${count}`);
+            break;
+          case 'consolewarn':
+            console.warn("Console Warn Button");
+            break;
+          case 'consoleassert':
+            number = 2
+            console.assert(number === 3, { number: number, errorMsg: `The number does not equal 3` });
+            break;
+          case 'consoleclear':
+            count = 0;
+            console.clear();
+            break;
+          case 'consoledir': // ???????????????????????????????????????????????????????????????
+            errorBtns.forEach((button, index) => {
+              console.dir(button);
+            });
+            // console.dir(errorBtns);
+            break;
+          case 'consoledirxml':
+            console.dirxml(btn);
+            break;
+          case 'consolegroupstart':
+            if (!groupStarted) {
+              console.group('Group Start Demo'); 
+              groupStarted = true;
+            }
+            break; 
+          case 'consolegroupend':
+            if (groupStarted) {
+              console.groupEnd(); 
+              groupStarted = false;
+            }
+            break;
+          case 'consoletable':
+            const data = [
+              { name: "Software Engineering",           num: 110 },
+              { name: "Programming Language",           num: 130 },
+              { name: "Advanced Software Engineering",  num: 112 }
+            ];
+            console.table(data);
+            break;
+          case 'starttimer':
+            console.time('Timer Button');
+            break;
+          case 'endtimer':
+            console.timeEnd('Timer Button');
+            break;
+          case 'consoletrace':
+            btn.addEventListener('click', handleBtnClick);
+            break;  
+          
+          case 'triggeraglobalerror': 
+            btn.addEventListener('click', triggerGlobalError);
+            break;
+
+          default:
+            console.log(`Method ${methodName} not implemented`);
+        }
+      });
+    });
+
+
+
+
   </script>
 </body>
 

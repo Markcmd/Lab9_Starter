@@ -152,6 +152,12 @@
       }
     }
 
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error("Global error caught: ", message, source, lineno, colno, error);
+      return true; // Prevent the default browser error handling
+    };
+
+
 
     function deepest()        {console.trace();}
     function deeper()         {deepest();}
